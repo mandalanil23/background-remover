@@ -14,6 +14,11 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 40
 
+    # `secrets` is not allowed inside a step-level `if:`. Exposing the secret as a
+    # job-level env var lets the steps below test it with the `env` context instead.
+    env:
+      KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -44,12 +49,24 @@ jobs:
           path: app/build/reports/tests/
           if-no-files-found: ignore
 
-      # Signing material is optional: without these secrets the build still runs and
-      # produces unsigned artifacts, which are fine for inspection but not for Play.
+      # The debug APK is signed with the standard Android debug key, so it installs on a
+      # phone with no secrets configured at all. This is the artifact to grab when you just
+      # want to try the app.
+      - name: Build debug APK (installable, no secrets needed)
+        run: ./gradlew assembleDebug --stacktrace
+
+      - name: Upload debug APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-debug-apk
+          path: app/build/outputs/apk/debug/*.apk
+          if-no-files-found: error
+
+      # Signing material is optional: without these secrets the build still runs, but the
+      # release APK comes out UNSIGNED and Android will refuse to install it. Use the debug
+      # APK above for testing, and add the secrets when you are ready to publish.
       - name: Decode keystore
-        if: ${{ secrets.KEYSTORE_BASE64 != '' }}
-        env:
-          KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
+        if: env.KEYSTORE_BASE64 != ''
         run: echo "$KEYSTORE_BASE64" | base64 --decode > release.jks
 
       - name: Build release AAB
