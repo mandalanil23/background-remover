@@ -1,5 +1,6 @@
 package com.bgremover.pngmaker.imaging
 
+import android.content.ContentResolver
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -9,6 +10,7 @@ import android.provider.OpenableColumns
 import androidx.exifinterface.media.ExifInterface
 import com.bgremover.pngmaker.util.AppError
 import com.bgremover.pngmaker.util.sanitizeDisplayName
+import java.io.File
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.sqrt
@@ -50,7 +52,24 @@ object PhotoDecoder {
             }
         }
 
-        val mimeType = resolver.getType(uri)?.lowercase().orEmpty()
+        // A `file://` URI — which is what the crop screen hands back — has no provider
+        // behind it, so the query above returns nothing and `getType` returns null. Both
+        // facts are readable straight off the file instead.
+        var fileMimeType = ""
+        if (uri.scheme == ContentResolver.SCHEME_FILE) {
+            uri.path?.let(::File)?.takeIf { it.isFile }?.let { file ->
+                displayName = sanitizeDisplayName(file.name)
+                sizeBytes = file.length()
+                fileMimeType = when (file.extension.lowercase()) {
+                    "png" -> "image/png"
+                    "webp" -> "image/webp"
+                    "jpg", "jpeg" -> "image/jpeg"
+                    else -> ""
+                }
+            }
+        }
+
+        val mimeType = resolver.getType(uri)?.lowercase().orEmpty().ifEmpty { fileMimeType }
 
         val bounds = BitmapFactory.Options().apply { inJustDecodeBounds = true }
         val opened = runCatching {

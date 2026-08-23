@@ -23,14 +23,19 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.draw.scale
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.bgremover.pngmaker.R
+import com.bgremover.pngmaker.ui.components.AuroraBackground
 import com.bgremover.pngmaker.ui.components.CheckerboardBox
+import com.bgremover.pngmaker.ui.theme.AppGradients
+import com.bgremover.pngmaker.ui.theme.BrandFuchsia
+import com.bgremover.pngmaker.ui.theme.BrandViolet
+import com.bgremover.pngmaker.ui.theme.gradientFill
 import kotlinx.coroutines.delay
 
 private const val SPLASH_HOLD_MS = 900L
@@ -55,19 +60,7 @@ fun SplashScreen(onFinished: () -> Unit) {
         onFinished()
     }
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(
-                Brush.verticalGradient(
-                    listOf(
-                        MaterialTheme.colorScheme.background,
-                        MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.4f)
-                    )
-                )
-            ),
-        contentAlignment = Alignment.Center
-    ) {
+    AuroraBackground(contentAlignment = Alignment.Center) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,
@@ -78,19 +71,18 @@ fun SplashScreen(onFinished: () -> Unit) {
                     .size(120.dp)
                     .scale(scale.value)
                     .alpha(fade.value)
+                    .shadow(
+                        elevation = 28.dp,
+                        shape = RoundedCornerShape(30.dp),
+                        ambientColor = BrandViolet,
+                        spotColor = BrandFuchsia
+                    )
                     .clip(RoundedCornerShape(30.dp))
             ) {
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
-                        .background(
-                            Brush.linearGradient(
-                                listOf(
-                                    MaterialTheme.colorScheme.primary,
-                                    MaterialTheme.colorScheme.secondary
-                                )
-                            )
-                        ),
+                        .background(AppGradients.diagonal()),
                     contentAlignment = Alignment.Center
                 ) {
                     Image(
@@ -107,7 +99,9 @@ fun SplashScreen(onFinished: () -> Unit) {
                 text = stringResource(R.string.app_name),
                 style = MaterialTheme.typography.headlineMedium,
                 color = MaterialTheme.colorScheme.onBackground,
-                modifier = Modifier.alpha(fade.value)
+                modifier = Modifier
+                    .alpha(fade.value)
+                    .gradientFill(AppGradients.horizontal())
             )
 
             Spacer(Modifier.height(8.dp))

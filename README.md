@@ -108,9 +108,17 @@ demand. Push this repo to GitHub, then add four repository secrets under
 | `KEY_ALIAS` | e.g. `bgremover` |
 | `KEY_PASSWORD` | key password |
 
-Run the workflow from the **Actions** tab; the signed `.apk` and `.aab` appear as
-downloadable build artifacts. Without the secrets the workflow still runs and produces
-unsigned artifacts plus the unit-test report.
+Run the workflow from the **Actions** tab. Three artifacts come out:
+
+| Artifact | Needs secrets? | Use |
+| --- | --- | --- |
+| `app-debug-apk` | **No** | Installs on any phone straight away — grab this to try the app |
+| `app-release-apk` | Yes | Signed APK for distribution outside Play |
+| `app-release-aab` | Yes | Upload this to the Play Console |
+
+Without the secrets the workflow still succeeds, but the *release* artifacts come out
+unsigned and Android refuses to install an unsigned APK — use `app-debug-apk` for testing
+until you have a keystore.
 
 ---
 
@@ -120,6 +128,7 @@ There is no fake cut-out anywhere in this project. The pipeline is:
 
 ```
 pick image
+   ↓  CropScreen        optional: crop, rotate, mirror — writes a reframed JPEG
    ↓  PhotoDecoder      decode at the configured pixel budget, apply EXIF rotation
    ↓  scaleForSegmentation   working copy, longest side ≤ 1536 px
    ↓  BackgroundRemover  ML Kit → per-pixel foreground confidence mask
@@ -181,6 +190,8 @@ app/src/main/java/com/bgremover/pngmaker/
 │   ├── EngineFactory.kt         Engine selection + native resource cache
 │   └── BackgroundRemovalService.kt  Orchestration, stages, timeouts
 ├── imaging/
+│   ├── CropGeometry.kt          Crop maths — normalised rects, aspect locking (no Android)
+│   ├── ImageCropper.kt          Applies crop/rotate/mirror to real pixels
 │   ├── PhotoDecoder.kt          Safe decode, EXIF, downsampling, OOM retry
 │   ├── MaskCompositor.kt        Mask → alpha, banded, bilinear, smoothstep
 │   ├── PngExporter.kt           MediaStore (Q+) / legacy gallery save
@@ -189,25 +200,42 @@ app/src/main/java/com/bgremover/pngmaker/
 ├── nav/                         Routes + NavHost with transitions
 ├── ui/
 │   ├── EditorViewModel.kt       The whole one-image workflow
+│   ├── CropViewModel.kt         Crop editor state, preview orientation, export
 │   ├── SettingsViewModel.kt · RecentImagesViewModel.kt
 │   ├── components/              Checkerboard, zoom, before/after, scaffold, dialogs
-│   ├── screens/                 The 10 screens
+│   ├── screens/                 The 11 screens
 │   └── theme/                   Material 3 colour, type, shape
 └── util/                        AppError, formatting helpers
 ```
 
-### The 10 screens
+### The look
+
+The identity is one three-stop ramp — violet → fuchsia → cyan — defined once in
+`ui/theme/Color.kt` and used only through `ui/theme/Gradients.kt`. Gradients are
+deliberately the same in light and dark: what changes between themes is the surface behind
+them, not the brand. `AuroraBackground` draws three drifting radial clouds in a single
+`drawBehind` pass behind the main screens, and `Modifier.gradientFill` paints text with the
+ramp by flooding an offscreen layer with `SrcAtop`.
+
+Wallpaper-derived dynamic colour is therefore **off by default** — it would replace the
+brand with the user's wallpaper on Android 12+. The Settings toggle still offers it.
+
+
+### The 11 screens
 
 1. **Splash** – system splash (`core-splashscreen`) → branded animated splash
 2. **Home** – logo, tagline, big **+ Upload Image**, recents strip, navigation
 3. **Image Selection** – Photo Picker / file picker, preview, file info
-4. **Processing** – staged progress, cancellable, never blocks the UI thread
-5. **Before/After Preview** – checkerboard, pinch-zoom, drag-to-compare, reset
-6. **Save & Share** – Save PNG, Share, Process Another
-7. **Recent Images** – grid of previous results, share/delete
-8. **Settings** – engine, output size, edge softness, theme, storage
-9. **Privacy Policy** – full text, offline
-10. **About** – version, credits
+4. **Crop & Rotate** – optional. Drag-to-reframe with rule-of-thirds guides, locked
+   aspect ratios (1:1, 4:3, 3:4, 16:9, 9:16), quarter-turn rotation and a mirror. The
+   cropped file becomes the source, so nothing downstream knows cropping happened.
+5. **Processing** – staged progress, cancellable, never blocks the UI thread
+6. **Before/After Preview** – checkerboard, pinch-zoom, drag-to-compare, reset
+7. **Save & Share** – Save PNG, Share, Process Another
+8. **Recent Images** – grid of previous results, share/delete
+9. **Settings** – engine, output size, edge softness, theme, storage
+10. **Privacy Policy** – full text, offline
+11. **About** – version, credits
 
 ---
 

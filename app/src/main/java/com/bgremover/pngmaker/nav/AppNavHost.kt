@@ -18,6 +18,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.bgremover.pngmaker.ui.EditorViewModel
 import com.bgremover.pngmaker.ui.screens.AboutScreen
+import com.bgremover.pngmaker.ui.screens.CropScreen
 import com.bgremover.pngmaker.ui.screens.HomeScreen
 import com.bgremover.pngmaker.ui.screens.ImageSelectionScreen
 import com.bgremover.pngmaker.ui.screens.PreviewScreen
@@ -97,11 +98,25 @@ fun AppNavHost(
             ImageSelectionScreen(
                 state = editorState,
                 onImagePicked = editorViewModel::onImageSelected,
+                onCropImage = { navController.navigate(Routes.CROP) },
                 onStartProcessing = {
                     editorViewModel.process()
                     navController.navigate(Routes.PROCESSING)
                 },
                 onDismissError = editorViewModel::dismissError,
+                onBack = { navController.popBackStack() }
+            )
+        }
+
+        composable(Routes.CROP) {
+            CropScreen(
+                sourceUri = editorState.source?.uri,
+                onCropped = { uri ->
+                    // The cropped file becomes the source, so the rest of the pipeline —
+                    // processing, preview, export — needs no knowledge of cropping at all.
+                    editorViewModel.onImageSelected(uri)
+                    navController.popBackStack()
+                },
                 onBack = { navController.popBackStack() }
             )
         }

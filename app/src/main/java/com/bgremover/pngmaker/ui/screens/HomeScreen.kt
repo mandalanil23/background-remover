@@ -39,7 +39,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -52,11 +53,16 @@ import coil.compose.AsyncImage
 import com.bgremover.pngmaker.R
 import com.bgremover.pngmaker.data.model.ProcessedImage
 import com.bgremover.pngmaker.ui.RecentImagesViewModel
+import com.bgremover.pngmaker.ui.components.AuroraBackground
 import com.bgremover.pngmaker.ui.components.CheckerboardBox
 import com.bgremover.pngmaker.ui.components.GradientBadge
 import com.bgremover.pngmaker.ui.components.PrimaryActionButton
 import com.bgremover.pngmaker.ui.components.SectionCard
 import com.bgremover.pngmaker.ui.components.ThinDivider
+import com.bgremover.pngmaker.ui.theme.AppGradients
+import com.bgremover.pngmaker.ui.theme.BrandFuchsia
+import com.bgremover.pngmaker.ui.theme.BrandViolet
+import com.bgremover.pngmaker.ui.theme.gradientFill
 import java.io.File
 
 @Composable
@@ -70,76 +76,78 @@ fun HomeScreen(
 ) {
     val recents by recentViewModel.items.collectAsStateWithLifecycle()
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
-            .statusBarsPadding()
-            .navigationBarsPadding()
-            .verticalScroll(rememberScrollState())
-            .padding(horizontal = 20.dp)
-            .padding(top = 24.dp, bottom = 32.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        AppLogo()
+    AuroraBackground {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .statusBarsPadding()
+                .navigationBarsPadding()
+                .verticalScroll(rememberScrollState())
+                .padding(horizontal = 20.dp)
+                .padding(top = 24.dp, bottom = 32.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            AppLogo()
 
-        Spacer(Modifier.height(20.dp))
+            Spacer(Modifier.height(20.dp))
 
-        Text(
-            text = stringResource(R.string.app_name),
-            style = MaterialTheme.typography.displaySmall,
-            color = MaterialTheme.colorScheme.onBackground,
-            textAlign = TextAlign.Center
-        )
+            Text(
+                text = stringResource(R.string.app_name),
+                style = MaterialTheme.typography.displaySmall,
+                color = MaterialTheme.colorScheme.onBackground,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.gradientFill(AppGradients.horizontal())
+            )
 
-        Spacer(Modifier.height(8.dp))
+            Spacer(Modifier.height(8.dp))
 
-        Text(
-            text = stringResource(R.string.app_tagline),
-            style = MaterialTheme.typography.bodyLarge,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-            textAlign = TextAlign.Center,
-            modifier = Modifier.padding(horizontal = 12.dp)
-        )
+            Text(
+                text = stringResource(R.string.app_tagline),
+                style = MaterialTheme.typography.bodyLarge,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.padding(horizontal = 12.dp)
+            )
 
-        Spacer(Modifier.height(32.dp))
+            Spacer(Modifier.height(32.dp))
 
-        PrimaryActionButton(
-            text = stringResource(R.string.upload_image),
-            icon = Icons.Filled.Add,
-            onClick = onUploadImage,
-            modifier = Modifier.fillMaxWidth()
-        )
+            PrimaryActionButton(
+                text = stringResource(R.string.upload_image),
+                icon = Icons.Filled.Add,
+                onClick = onUploadImage,
+                modifier = Modifier.fillMaxWidth()
+            )
 
-        Spacer(Modifier.height(12.dp))
+            Spacer(Modifier.height(12.dp))
 
-        Text(
-            text = stringResource(R.string.supported_formats),
-            style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
+            Text(
+                text = stringResource(R.string.supported_formats),
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
 
-        Spacer(Modifier.height(28.dp))
+            Spacer(Modifier.height(28.dp))
 
-        FeatureStrip()
+            FeatureStrip()
 
-        Spacer(Modifier.height(28.dp))
+            Spacer(Modifier.height(28.dp))
 
-        RecentStrip(
-            recents = recents,
-            onSeeAll = onOpenRecent
-        )
+            RecentStrip(
+                recents = recents,
+                onSeeAll = onOpenRecent
+            )
 
-        Spacer(Modifier.height(28.dp))
+            Spacer(Modifier.height(28.dp))
 
-        SectionCard {
-            NavRow(Icons.Filled.History, stringResource(R.string.recent_images), onOpenRecent)
-            ThinDivider()
-            NavRow(Icons.Filled.Settings, stringResource(R.string.settings), onOpenSettings)
-            ThinDivider()
-            NavRow(Icons.Filled.Lock, stringResource(R.string.privacy_policy), onOpenPrivacy)
-            ThinDivider()
-            NavRow(Icons.Filled.Info, stringResource(R.string.about), onOpenAbout)
+            SectionCard {
+                NavRow(Icons.Filled.History, stringResource(R.string.recent_images), onOpenRecent)
+                ThinDivider()
+                NavRow(Icons.Filled.Settings, stringResource(R.string.settings), onOpenSettings)
+                ThinDivider()
+                NavRow(Icons.Filled.Lock, stringResource(R.string.privacy_policy), onOpenPrivacy)
+                ThinDivider()
+                NavRow(Icons.Filled.Info, stringResource(R.string.about), onOpenAbout)
+            }
         }
     }
 }
@@ -149,20 +157,19 @@ private fun AppLogo() {
     CheckerboardBox(
         modifier = Modifier
             .size(96.dp)
+            .shadow(
+                elevation = 22.dp,
+                shape = RoundedCornerShape(26.dp),
+                ambientColor = BrandViolet,
+                spotColor = BrandFuchsia
+            )
             .clip(RoundedCornerShape(26.dp)),
         cellSize = 10.dp
     ) {
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(
-                    Brush.linearGradient(
-                        listOf(
-                            MaterialTheme.colorScheme.primary,
-                            MaterialTheme.colorScheme.secondary
-                        )
-                    )
-                ),
+                .background(AppGradients.diagonal()),
             contentAlignment = Alignment.Center
         ) {
             androidx.compose.foundation.Image(
@@ -183,31 +190,39 @@ private fun FeatureStrip() {
         FeatureChip(
             icon = Icons.Filled.AutoAwesome,
             title = stringResource(R.string.feature_ai),
+            colors = AppGradients.Ramp,
             modifier = Modifier.weight(1f)
         )
         FeatureChip(
             icon = Icons.Filled.OfflineBolt,
             title = stringResource(R.string.feature_offline),
+            colors = AppGradients.Cool,
             modifier = Modifier.weight(1f)
         )
         FeatureChip(
             icon = Icons.Filled.Lock,
             title = stringResource(R.string.feature_private),
+            colors = AppGradients.Sunset,
             modifier = Modifier.weight(1f)
         )
     }
 }
 
 @Composable
-private fun FeatureChip(icon: ImageVector, title: String, modifier: Modifier = Modifier) {
+private fun FeatureChip(
+    icon: ImageVector,
+    title: String,
+    colors: List<Color>,
+    modifier: Modifier = Modifier
+) {
     Column(
         modifier = modifier
             .clip(MaterialTheme.shapes.medium)
-            .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.35f))
+            .background(MaterialTheme.colorScheme.surface.copy(alpha = 0.55f))
             .padding(vertical = 14.dp, horizontal = 8.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        GradientBadge(icon = icon, size = 36.dp)
+        GradientBadge(icon = icon, size = 36.dp, colors = colors)
         Spacer(Modifier.height(8.dp))
         Text(
             text = title,

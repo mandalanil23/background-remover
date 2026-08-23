@@ -104,12 +104,22 @@ for path in walk(os.path.join(RES, "values"), ".xml") :
 # ---------------------------------------------------------------- Kotlin symbol table
 declared_symbols = {}          # fully-qualified name -> file
 package_of = {}
+# The captured group may be a dotted path, because an extension declaration names its
+# receiver first: `fun Modifier.gradientFill(...)` declares `gradientFill`, not `Modifier`.
+# `declared_name` takes the last segment. A leading `<T>` type-parameter list is skipped so
+# generic declarations are seen too.
 top_level = re.compile(
     r"^\s*(?:@\w+\s+)*(?:public\s+|internal\s+|private\s+|abstract\s+|open\s+|sealed\s+|"
-    r"data\s+|value\s+|annotation\s+|enum\s+)*"
-    r"(?:class|object|interface|fun|val|var|typealias)\s+([A-Za-z_][A-Za-z0-9_]*)",
+    r"data\s+|value\s+|annotation\s+|enum\s+|inline\s+|suspend\s+)*"
+    r"(?:class|object|interface|fun|val|var|typealias)\s+"
+    r"(?:<[^>]*>\s*)?"
+    r"((?:[A-Za-z_][A-Za-z0-9_]*\.)*[A-Za-z_][A-Za-z0-9_]*)",
     re.MULTILINE,
 )
+
+
+def declared_name(match):
+    return match.group(1).rsplit(".", 1)[-1]
 
 for path in kotlin_files:
     text = open(path, encoding="utf-8").read()
@@ -125,13 +135,15 @@ for path in kotlin_files:
             continue
         m = top_level.match(line)
         if m:
-            declared_symbols.setdefault(f"{pkg}.{m.group(1)}", path)
+            declared_symbols.setdefault(f"{pkg}.{declared_name(m)}", path)
 
 # Nested members referenced via import (e.g. an enum entry or companion const) are allowed
 # through by also registering `Outer.Inner` names.
 nested = re.compile(r"^\s{4}(?:@\w+\s+)*(?:public\s+|internal\s+|private\s+|"
-                    r"data\s+|sealed\s+|open\s+|abstract\s+|enum\s+)*"
-                    r"(?:class|object|interface|fun|val)\s+([A-Za-z_][A-Za-z0-9_]*)")
+                    r"data\s+|sealed\s+|open\s+|abstract\s+|enum\s+|inline\s+|suspend\s+)*"
+                    r"(?:class|object|interface|fun|val)\s+"
+                    r"(?:<[^>]*>\s*)?"
+                    r"((?:[A-Za-z_][A-Za-z0-9_]*\.)*[A-Za-z_][A-Za-z0-9_]*)")
 
 for path in kotlin_files:
     text = open(path, encoding="utf-8").read()
@@ -143,11 +155,11 @@ for path in kotlin_files:
         if not line.startswith((" ", "\t")):
             m = top_level.match(line)
             if m:
-                current_outer = m.group(1)
+                current_outer = declared_name(m)
         else:
             m = nested.match(line)
             if m and current_outer:
-                declared_symbols.setdefault(f"{pkg}.{current_outer}.{m.group(1)}", path)
+                declared_symbols.setdefault(f"{pkg}.{current_outer}.{declared_name(m)}", path)
 
 # ---------------------------------------------------------------- internal imports
 import_re = re.compile(r"^import\s+(" + re.escape(PACKAGE) + r"[\w.]*)", re.MULTILINE)

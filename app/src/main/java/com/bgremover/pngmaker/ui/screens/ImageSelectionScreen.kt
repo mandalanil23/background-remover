@@ -22,6 +22,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AutoAwesome
+import androidx.compose.material.icons.filled.Crop
 import androidx.compose.material.icons.filled.Folder
 import androidx.compose.material.icons.filled.PhotoLibrary
 import androidx.compose.material.icons.filled.SwapHoriz
@@ -41,10 +43,12 @@ import coil.compose.AsyncImage
 import com.bgremover.pngmaker.R
 import com.bgremover.pngmaker.ui.EditorUiState
 import com.bgremover.pngmaker.ui.components.AppScaffold
+import com.bgremover.pngmaker.ui.components.AuroraBackground
 import com.bgremover.pngmaker.ui.components.ErrorDialog
 import com.bgremover.pngmaker.ui.components.GradientBadge
 import com.bgremover.pngmaker.ui.components.InfoRow
 import com.bgremover.pngmaker.ui.components.PrimaryActionButton
+import com.bgremover.pngmaker.ui.components.SecondaryActionButton
 import com.bgremover.pngmaker.ui.components.SectionCard
 import com.bgremover.pngmaker.ui.components.ThinDivider
 import com.bgremover.pngmaker.util.formatDimensions
@@ -61,6 +65,7 @@ import com.bgremover.pngmaker.util.formatMegapixels
 fun ImageSelectionScreen(
     state: EditorUiState,
     onImagePicked: (Uri) -> Unit,
+    onCropImage: () -> Unit,
     onStartProcessing: () -> Unit,
     onDismissError: () -> Unit,
     onBack: () -> Unit
@@ -84,97 +89,109 @@ fun ImageSelectionScreen(
 
     AppScaffold(
         title = stringResource(R.string.selected_image),
-        onBack = onBack
+        onBack = onBack,
+        transparent = true
     ) { padding ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(padding)
-                .navigationBarsPadding()
-                .verticalScroll(rememberScrollState())
-                .padding(horizontal = 20.dp, vertical = 12.dp)
-        ) {
-            val source = state.source
+        AuroraBackground(modifier = Modifier.padding(padding), intensity = 0.75f) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .navigationBarsPadding()
+                    .verticalScroll(rememberScrollState())
+                    .padding(horizontal = 20.dp, vertical = 12.dp)
+            ) {
+                val source = state.source
 
-            if (source == null) {
-                PickerOption(
-                    icon = Icons.Filled.PhotoLibrary,
-                    title = stringResource(R.string.choose_from_gallery),
-                    subtitle = stringResource(R.string.choose_from_gallery_desc),
-                    onClick = openGallery
-                )
-                Spacer(Modifier.height(12.dp))
-                PickerOption(
-                    icon = Icons.Filled.Folder,
-                    title = stringResource(R.string.browse_files),
-                    subtitle = stringResource(R.string.browse_files_desc),
-                    onClick = openFiles
-                )
-                Spacer(Modifier.height(20.dp))
-                Text(
-                    text = stringResource(R.string.supported_formats),
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    modifier = Modifier.align(Alignment.CenterHorizontally)
-                )
-            } else {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .aspectRatio(if (source.isLandscape) 4f / 3f else 3f / 4f)
-                        .clip(MaterialTheme.shapes.large)
-                        .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.4f))
-                ) {
-                    AsyncImage(
-                        model = source.uri,
-                        contentDescription = stringResource(R.string.selected_image),
-                        contentScale = ContentScale.Fit,
-                        modifier = Modifier.fillMaxSize()
+                if (source == null) {
+                    PickerOption(
+                        icon = Icons.Filled.PhotoLibrary,
+                        title = stringResource(R.string.choose_from_gallery),
+                        subtitle = stringResource(R.string.choose_from_gallery_desc),
+                        onClick = openGallery
                     )
-                }
-
-                Spacer(Modifier.height(16.dp))
-
-                SectionCard {
-                    InfoRow(label = stringResource(R.string.info_file), value = source.displayName)
-                    ThinDivider()
-                    InfoRow(
-                        label = stringResource(R.string.info_dimensions),
-                        value = formatDimensions(source.width, source.height)
+                    Spacer(Modifier.height(12.dp))
+                    PickerOption(
+                        icon = Icons.Filled.Folder,
+                        title = stringResource(R.string.browse_files),
+                        subtitle = stringResource(R.string.browse_files_desc),
+                        onClick = openFiles
                     )
-                    ThinDivider()
-                    InfoRow(
-                        label = stringResource(R.string.info_resolution),
-                        value = formatMegapixels(source.width, source.height)
+                    Spacer(Modifier.height(20.dp))
+                    Text(
+                        text = stringResource(R.string.supported_formats),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.align(Alignment.CenterHorizontally)
                     )
-                    ThinDivider()
-                    InfoRow(label = stringResource(R.string.info_size), value = formatFileSize(source.sizeBytes))
-                    ThinDivider()
-                    InfoRow(label = stringResource(R.string.info_format), value = source.mimeType)
-                }
-
-                Spacer(Modifier.height(20.dp))
-
-                PrimaryActionButton(
-                    text = stringResource(R.string.remove_background),
-                    onClick = onStartProcessing,
-                    modifier = Modifier.fillMaxWidth()
-                )
-
-                Spacer(Modifier.height(4.dp))
-
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Center
-                ) {
-                    TextButton(onClick = openGallery) {
-                        Icon(
-                            Icons.Filled.SwapHoriz,
-                            contentDescription = null,
-                            modifier = Modifier.size(18.dp)
+                } else {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .aspectRatio(if (source.isLandscape) 4f / 3f else 3f / 4f)
+                            .clip(MaterialTheme.shapes.large)
+                            .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.4f))
+                    ) {
+                        AsyncImage(
+                            model = source.uri,
+                            contentDescription = stringResource(R.string.selected_image),
+                            contentScale = ContentScale.Fit,
+                            modifier = Modifier.fillMaxSize()
                         )
-                        Spacer(Modifier.width(6.dp))
-                        Text(stringResource(R.string.change_image))
+                    }
+
+                    Spacer(Modifier.height(16.dp))
+
+                    SectionCard {
+                        InfoRow(label = stringResource(R.string.info_file), value = source.displayName)
+                        ThinDivider()
+                        InfoRow(
+                            label = stringResource(R.string.info_dimensions),
+                            value = formatDimensions(source.width, source.height)
+                        )
+                        ThinDivider()
+                        InfoRow(
+                            label = stringResource(R.string.info_resolution),
+                            value = formatMegapixels(source.width, source.height)
+                        )
+                        ThinDivider()
+                        InfoRow(label = stringResource(R.string.info_size), value = formatFileSize(source.sizeBytes))
+                        ThinDivider()
+                        InfoRow(label = stringResource(R.string.info_format), value = source.mimeType)
+                    }
+
+                    Spacer(Modifier.height(20.dp))
+
+                    SecondaryActionButton(
+                        text = stringResource(R.string.crop_edit),
+                        icon = Icons.Filled.Crop,
+                        onClick = onCropImage,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+
+                    Spacer(Modifier.height(10.dp))
+
+                    PrimaryActionButton(
+                        text = stringResource(R.string.remove_background),
+                        icon = Icons.Filled.AutoAwesome,
+                        onClick = onStartProcessing,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+
+                    Spacer(Modifier.height(4.dp))
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+                        TextButton(onClick = openGallery) {
+                            Icon(
+                                Icons.Filled.SwapHoriz,
+                                contentDescription = null,
+                                modifier = Modifier.size(18.dp)
+                            )
+                            Spacer(Modifier.width(6.dp))
+                            Text(stringResource(R.string.change_image))
+                        }
                     }
                 }
             }

@@ -5,6 +5,7 @@ object Routes {
     const val SPLASH = "splash"
     const val HOME = "home"
     const val SELECT = "select"
+    const val CROP = "crop"
     const val PROCESSING = "processing"
     const val PREVIEW = "preview"
     const val SAVE = "save"

@@ -60,5 +60,7 @@ data class AppSettings(
     val edgeSoftness: EdgeSoftness = EdgeSoftness.NATURAL,
     val keepRecents: Boolean = true,
     val themeMode: ThemeMode = ThemeMode.SYSTEM,
-    val dynamicColor: Boolean = true
+    // Off by default: the app's identity is its own gradient ramp, and wallpaper-derived
+    // colours would quietly replace it on Android 12+. Users who prefer that can opt in.
+    val dynamicColor: Boolean = false
 )

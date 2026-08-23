@@ -51,7 +51,7 @@ class SettingsRepository(private val context: Context) {
                 edgeSoftness = EdgeSoftness.fromName(prefs[Keys.EDGE]),
                 keepRecents = prefs[Keys.KEEP_RECENTS] ?: true,
                 themeMode = ThemeMode.fromName(prefs[Keys.THEME]),
-                dynamicColor = prefs[Keys.DYNAMIC_COLOR] ?: true
+                dynamicColor = prefs[Keys.DYNAMIC_COLOR] ?: false
             )
         }
 
