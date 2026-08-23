@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  System splash-screen icon. Android masks this into a circle and only the inner 2/3 of
+  the canvas is guaranteed visible, so the mark is kept well inside the safe area.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M54,36m-10,0a10,10 0 1,0 20,0a10,10 0 1,0 -20,0" />
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M54,50C65.6,50 75,58.9 75,70v3a2.5,2.5 0 0,1 -2.5,2.5h-37A2.5,2.5 0 0,1 33,73v-3C33,58.9 42.4,50 54,50z" />
+    <path
+        android:fillColor="#FF22D3A6"
+        android:pathData="M70,50l3.6,7.4 8.1,1.2 -5.9,5.7 1.4,8.1 -7.2,-3.8 -7.2,3.8 1.4,-8.1 -5.9,-5.7 8.1,-1.2z" />
+</vector>

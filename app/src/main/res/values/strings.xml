@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Background Remover</string>
+    <string name="app_full_name">Background Remover – PNG Maker</string>
+    <string name="app_tagline">Remove image background and save as transparent PNG</string>
+
+    <!-- Home -->
+    <string name="upload_image">Upload Image</string>
+    <string name="recent_images">Recent Images</string>
+    <string name="settings">Settings</string>
+    <string name="about">About</string>
+    <string name="privacy_policy">Privacy Policy</string>
+    <string name="see_all">See all</string>
+    <string name="no_recent_images">No processed images yet</string>
+    <string name="feature_ai">AI cut-out</string>
+    <string name="feature_offline">Works offline</string>
+    <string name="feature_private">Stays private</string>
+    <string name="no_recent_images_hint">Your transparent PNGs will appear here after you process an image.</string>
+
+    <!-- Picker -->
+    <string name="choose_from_gallery">Choose from Gallery</string>
+    <string name="choose_from_gallery_desc">Android Photo Picker — no permission needed</string>
+    <string name="browse_files">Browse Files</string>
+    <string name="browse_files_desc">Pick from Downloads, Drive or any file provider</string>
+    <string name="supported_formats">Supports JPG, JPEG, PNG and WEBP</string>
+    <string name="selected_image">Selected image</string>
+    <string name="remove_background">Remove Background</string>
+    <string name="change_image">Change image</string>
+
+    <!-- Processing -->
+    <string name="processing_title">Removing background…</string>
+    <string name="processing_hint">This runs entirely on your device. Please keep the app open.</string>
+    <string name="cancel">Cancel</string>
+
+    <!-- Preview -->
+    <string name="preview_title">Preview</string>
+    <string name="original">Original</string>
+    <string name="result">Result</string>
+    <string name="compare">Compare</string>
+    <string name="reset_view">Reset view</string>
+    <string name="zoom_in">Zoom in</string>
+    <string name="zoom_out">Zoom out</string>
+    <string name="checkerboard_hint">The checkerboard pattern shows transparent areas.</string>
+
+    <!-- Save &amp; share -->
+    <string name="save_png">Save PNG</string>
+    <string name="share">Share</string>
+    <string name="continue_to_save">Continue</string>
+    <string name="process_another">Process Another Image</string>
+    <string name="saved_to">Saved to Pictures/Background Remover</string>
+    <string name="share_via">Share PNG via</string>
+    <string name="open_saved_image">Open saved image</string>
+    <string name="delete">Delete</string>
+    <string name="clear_all">Clear all</string>
+    <string name="delete_confirm">Delete %1$s from recent images? The copy in your gallery is not affected.</string>
+
+    <!-- Settings -->
+    <string name="settings_engine">Background removal engine</string>
+    <string name="settings_engine_auto">Automatic (recommended)</string>
+    <string name="settings_engine_auto_desc">Uses general subject detection when available, otherwise the built-in person model.</string>
+    <string name="settings_engine_subject">General subject</string>
+    <string name="settings_engine_subject_desc">Best for products, animals and objects. Needs the Google Play services model.</string>
+    <string name="settings_engine_person">People (offline)</string>
+    <string name="settings_engine_person_desc">Built into the app. Works with no network at all.</string>
+
+    <string name="settings_quality">Maximum processing size</string>
+    <string name="settings_quality_desc">Larger keeps more detail but uses more memory.</string>
+    <string name="settings_storage">Storage</string>
+    <string name="quality_fast">Fast — up to 4 MP</string>
+    <string name="quality_balanced">Balanced — up to 8 MP</string>
+    <string name="quality_original">Maximum — up to 16 MP</string>
+    <string name="edge_sharp">Sharp</string>
+    <string name="edge_natural">Natural (recommended)</string>
+    <string name="edge_soft">Soft</string>
+    <string name="settings_edge_softness">Edge softness</string>
+    <string name="settings_edge_softness_desc">Feathers the cut-out edge so hair and fur blend naturally.</string>
+    <string name="settings_keep_recents">Keep recent results</string>
+    <string name="settings_keep_recents_desc">Store processed PNGs inside the app so you can find them later.</string>
+    <string name="settings_theme">Appearance</string>
+    <string name="settings_theme_system">Follow system</string>
+    <string name="settings_theme_light">Light</string>
+    <string name="settings_theme_dark">Dark</string>
+    <string name="settings_dynamic_color">Dynamic colour</string>
+    <string name="settings_dynamic_color_desc">Match the app palette to your wallpaper (Android 12+).</string>
+    <string name="settings_clear_cache">Clear temporary files</string>
+    <string name="settings_clear_cache_desc">Removes working copies created during processing.</string>
+    <string name="settings_cache_cleared">Temporary files cleared</string>
+
+    <!-- Errors -->
+    <string name="error_generic">Unable to process this image. Please try again.</string>
+    <string name="error_invalid_image">This file could not be opened as an image. Please choose another one.</string>
+    <string name="error_unsupported_format">This image format is not supported. Please use JPG, PNG or WEBP.</string>
+    <string name="error_too_large">This image is very large. We resized it so it can be processed safely.</string>
+    <string name="error_out_of_memory">This image is too large for your device\'s memory. Try a smaller image.</string>
+    <string name="error_no_subject">We could not find a clear subject in this image. Try a photo with a distinct person or object.</string>
+    <string name="error_timeout">Processing took too long and was stopped. Please try again.</string>
+    <string name="error_model_unavailable">The background removal model is still being prepared by Google Play services. Please try again in a moment.</string>
+    <string name="error_no_network_for_model">The advanced model needs a one-time download. Connect to the internet once, or switch to the offline People model in Settings.</string>
+    <string name="error_storage_permission">Storage permission is required to save the PNG to your gallery.</string>
+    <string name="error_insufficient_storage">Not enough free space to save the PNG. Please free up some space.</string>
+    <string name="error_save_failed">The PNG could not be saved. Please try again.</string>
+    <string name="error_share_failed">No app available to share this image.</string>
+    <string name="error_title">Something went wrong</string>
+    <string name="retry">Retry</string>
+    <string name="dismiss">Dismiss</string>
+
+    <!-- Common -->
+    <string name="back">Back</string>
+    <string name="ok">OK</string>
+    <string name="info_file">File</string>
+    <string name="info_dimensions">Dimensions</string>
+    <string name="info_resolution">Resolution</string>
+    <string name="info_size">Size</string>
+    <string name="info_format">Format</string>
+    <string name="info_transparency">Transparency</string>
+    <string name="info_transparency_value">Preserved (32-bit PNG)</string>
+    <string name="version_format">Version %1$s (%2$d)</string>
+
+
+    <!-- Privacy policy -->
+    <string name="privacy_updated">Last updated: 1 January 2026</string>
+    <string name="privacy_intro">Background Remover – PNG Maker is designed so that your photos never leave your phone. This policy explains exactly what the app does and does not do with your data.</string>
+
+    <string name="privacy_h_collect">Information we collect</string>
+    <string name="privacy_b_collect">None. The app has no account system, no analytics, no advertising SDK and no crash-reporting service. We do not collect your name, email address, device identifiers, location or usage statistics.</string>
+
+    <string name="privacy_h_images">Your images</string>
+    <string name="privacy_b_images">Images you select are read only to remove their background, and all processing happens on your device using Google ML Kit\'s on-device segmentation models. Your images are never uploaded to us or to any third party. Your original file is never modified, moved or deleted.</string>
+
+    <string name="privacy_h_storage">Where files are stored</string>
+    <string name="privacy_b_storage">A temporary working copy is created in the app\'s private cache while an image is being processed, and is deleted automatically. Results you choose to keep are stored in the app\'s private folder for the Recent Images screen, and — only when you tap Save PNG — a copy is written to Pictures/Background Remover in your gallery. You can delete either at any time.</string>
+
+    <string name="privacy_h_permissions">Permissions</string>
+    <string name="privacy_b_permissions">The app uses the Android Photo Picker and the system file picker, which grant access to only the single file you choose, so no photo or media permission is requested. On Android 9 and older, saving to the gallery requires the storage permission; it is requested only at the moment you save. The app does not request internet access, and never reads contacts, SMS, call logs, location or any unrelated files.</string>
+
+    <string name="privacy_h_thirdparty">Third-party components</string>
+    <string name="privacy_b_thirdparty">The app uses Google ML Kit for image segmentation. The person-segmentation model is bundled inside the app and runs entirely offline. The general subject-segmentation model is delivered by Google Play services, which may download it once in the background; this transfers the model to your device and never sends your images anywhere. See Google\'s Privacy Policy for how Google Play services handles module downloads.</string>
+
+    <string name="privacy_h_children">Children</string>
+    <string name="privacy_b_children">The app is a general-purpose photo utility. It collects no personal data from anyone, including children.</string>
+
+    <string name="privacy_h_changes">Changes to this policy</string>
+    <string name="privacy_b_changes">If this policy changes, the updated version will ship with a new release of the app and the date above will change.</string>
+
+    <string name="privacy_h_contact">Contact</string>
+    <string name="privacy_b_contact">Questions about this policy can be sent to the developer contact address listed on the app\'s Google Play store page.</string>
+
+    <!-- About -->
+    <string name="about_what_it_does">What it does</string>
+    <string name="about_body">Background Remover – PNG Maker detects the main subject of a photo with on-device AI segmentation, erases everything behind it, and exports a true transparent PNG. Your original photo is never modified.</string>
+    <string name="about_offline_title">Works offline</string>
+    <string name="about_offline_body">All processing happens on your phone. No image is ever uploaded to a server and the app does not request internet access.</string>
+    <string name="about_credits">Powered by Google ML Kit on-device image segmentation.</string>
+</resources>

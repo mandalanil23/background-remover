@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<paths>
+    <!-- Temporary PNGs handed to the share sheet. -->
+    <cache-path name="shared_images" path="shared/" />
+    <!-- Processed results kept for the "Recent images" screen. -->
+    <files-path name="processed_images" path="processed/" />
+    <!-- Copies the app itself wrote to the public gallery. -->
+    <external-path name="external_pictures" path="Pictures/" />
+</paths>

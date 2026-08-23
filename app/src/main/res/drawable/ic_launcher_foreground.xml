@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Subject silhouette, kept inside the 72dp adaptive-icon safe zone. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <!-- Head -->
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M54,34m-13,0a13,13 0 1,0 26,0a13,13 0 1,0 -26,0" />
+
+    <!-- Shoulders: domed top, flat base -->
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M54,54c14.4,0 26,11.6 26,26v8H28v-8C28,65.6 39.6,54 54,54z" />
+</vector>
